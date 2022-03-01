@@ -18,14 +18,15 @@ import org.springframework.web.client.HttpStatusCodeException;
 public class token {
 
     private static String access_token="";
-    private static String grant_type="";
+    private static String grant_type="client_credentials";
     private static String scope="all";
 
-    private static String client_id="";
-    private static String client_secret="";
-    private static String url_dir="";
+    // Produccion
+    private static String client_id="b794315b-7401-47a0-ba65-f2346ac0157b";
+    private static String client_secret="qX6uC1iW2oI0aN7yH2dF6cJ0vG0pR2mB5sG2iV4vA2bN6jQ0kC";
+    private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/oauth2/v1/token";
 
-    public String generarToken(){
+    public String generarTokenWSO2(){
         RestTemplate restTemplate = new RestTemplate();
 
         //creacion de header para solicitar token

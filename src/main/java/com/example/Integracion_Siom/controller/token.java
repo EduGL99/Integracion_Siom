@@ -2,6 +2,9 @@ package com.example.Integracion_Siom.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 import java.util.Arrays;
@@ -15,6 +18,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
 @Slf4j
+@RestController
+@RequestMapping("/Api")
 public class token {
 
     private static String access_token="";
@@ -26,6 +31,7 @@ public class token {
     private static String client_secret="qX6uC1iW2oI0aN7yH2dF6cJ0vG0pR2mB5sG2iV4vA2bN6jQ0kC";
     private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/oauth2/v1/token";
 
+    @RequestMapping(value = "token", method = RequestMethod.GET)
     public String generarTokenWSO2(){
         RestTemplate restTemplate = new RestTemplate();
 

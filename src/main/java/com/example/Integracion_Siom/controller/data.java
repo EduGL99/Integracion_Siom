@@ -12,4 +12,5 @@ public class data {
     int idSitio;
     String fechaCreacion;
     String status;
+
 }

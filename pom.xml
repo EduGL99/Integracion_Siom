@@ -18,6 +18,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.camunda.bpm.springboot</groupId>
+			<artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
+			<version>7.16.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
 			<version>4.2.2</version>

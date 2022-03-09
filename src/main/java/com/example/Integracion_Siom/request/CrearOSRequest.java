@@ -1,6 +1,7 @@
 package com.example.Integracion_Siom.request;
 
 import com.example.Integracion_Siom.controller.Token;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,22 +21,6 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/request")
 public class CrearOSRequest {
 
-    int cont_id;
-    int empl_id;
-    int empr_id;
-    int [] formularios;
-    int [] id_acompanante;
-    int id_despachador;
-    int id_jcuadrilla;
-    String descripcion;
-    String fecha_creacion;
-    String fecha_solicitud;
-    String indisponibilidad;
-    String tag;
-    String tipo;
-    int sube_id;
-    String user_login_creador;
-    String user_pass_creador;
 
     private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/oauth2/v1/token";
     private static String access_token;

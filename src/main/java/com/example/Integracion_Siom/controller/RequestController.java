@@ -56,7 +56,7 @@ public class RequestController {
     public String request() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headersToken = new HttpHeaders();
-        Token token = new Token();
+        TokenController token = new TokenController();
         ResponseEntity<String> response = null;
         HttpEntity<?> request=new HttpEntity<>(headersToken);
         HttpHeaders headers = new HttpHeaders();

@@ -1,11 +1,16 @@
 package com.example.Integracion_Siom.controller;
 
 import com.example.Integracion_Siom.Models.Project;
+import com.example.Integracion_Siom.Models.Request;
 import com.example.Integracion_Siom.Models.WorkOrder;
+import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@ExternalTaskSubscription("CheckProyectService")
 public class ProjectController {
     List<WorkOrder> workOrders = new ArrayList<>();
 
@@ -31,15 +36,16 @@ public class ProjectController {
     public boolean EsExterno(Project project){
         if(project.getType().equals("Externo"))
             return true;
-        if(project.getWorkOrders().get(0).getState().equals("EN PROGRESO"))
-            return true;
+        //if(project.getWorkOrders().get(0).getState().equals("EN PROGRESO"))
+          //  return true;
         return false;
     }
 
     public void SolicitaSIOM(Project project){
-        Project newProject = CrearProject();
-        if(EsExterno(newProject)){
-            //Aqui llamas al request
+        if(!EsExterno(project)){
+            RequestController requestController = new RequestController();
+            requestController.CrearRequest();
+            requestController.request();
         }else{
             //nada
         }

@@ -1,31 +1,18 @@
 package com.example.Integracion_Siom.request;
 
-import com.example.Integracion_Siom.controller.Token;
+import com.example.Integracion_Siom.controller.TokenController;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
-@RestController
-@RequestMapping("/request")
 public class CrearOSRequest {
 
 
     private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/oauth2/v1/token";
     private static String access_token;
-
-    @RequestMapping(value = "token", method = RequestMethod.GET)
+    /*
     public String request() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headersToken = new HttpHeaders();
@@ -63,4 +50,6 @@ public class CrearOSRequest {
             return null;
         }
     }
+
+     */
 }

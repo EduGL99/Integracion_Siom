@@ -8,6 +8,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -16,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@RestController
+@RequestMapping("/request")
 public class RequestController {
 
     public Request CrearRequest(){
@@ -47,10 +52,17 @@ public class RequestController {
         return request;
     }
 
+    // url de desarrollo
     private static String url_dir="http://apismx-dev.movistar.com.mx/token";
+
+    // url de produccion
     //private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/oauth2/v1/token";
+
+    //private static String url_dir="http://10.225.236.230:17004/saacmovistarcommx-prod/t-open-api-temm/equipmentSiteMaintenances/v1/serviceOrder";
+
     private static String access_token;
 
+    @RequestMapping(value = "token", method = RequestMethod.GET)
     public String request() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headersToken = new HttpHeaders();

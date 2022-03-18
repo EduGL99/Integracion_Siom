@@ -4,6 +4,8 @@ public class WorkOrder {
     String Id;
     String State;
     String IdPersonal;
+    String workOrderType;
+    String workOrderTemplate;
 
     public String getId() {
         return Id;

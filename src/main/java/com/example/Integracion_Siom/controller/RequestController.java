@@ -1,6 +1,6 @@
 package com.example.Integracion_Siom.controller;
 
-import com.example.Integracion_Siom.Models.Request;
+import com.example.Integracion_Siom.Model.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;

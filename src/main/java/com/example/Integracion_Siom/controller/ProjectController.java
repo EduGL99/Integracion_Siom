@@ -1,7 +1,7 @@
 package com.example.Integracion_Siom.controller;
 
-import com.example.Integracion_Siom.Models.Project;
-import com.example.Integracion_Siom.Models.WorkOrder;
+import com.example.Integracion_Siom.Model.Project;
+import com.example.Integracion_Siom.Model.WorkOrder;
 
 import java.util.ArrayList;
 import java.util.List;

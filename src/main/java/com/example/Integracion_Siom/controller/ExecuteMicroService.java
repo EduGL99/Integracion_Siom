@@ -9,6 +9,7 @@ import com.example.Integracion_Siom.service.impl.SymphonyWorkOrderService;
 import com.example.Integracion_Siom.service.impl.WorkTicketService;
 import com.example.Integracion_Siom.symphony.WorkOrderTypeGraphToTMFxxx;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
@@ -16,6 +17,9 @@ import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,14 +30,19 @@ import java.util.List;
 @Component
 @ExternalTaskSubscription("CheckProyectService")
 public class ExecuteMicroService implements ExternalTaskHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkTicketController.class);
+
+    @Autowired
+    WorkTicketService workTicketService;
 
     @Override
     public void execute(ExternalTask extTask, ExternalTaskService extTaskService) {
-        SymphonyWorkOrderService workTicketService = new SymphonyWorkOrderService();
+
+        WorkTicketService workTicketService = new WorkTicketService();
 
         SymphonyUserService w = new SymphonyUserService();
         try {
-            workTicketService.get("223338318668");
+            workTicketService.getWorkTicket("223338318668",extTask.getExtensionProperties());
             w.getUser("214748364805");
         } catch (JsonProcessingException e) {
             e.printStackTrace();

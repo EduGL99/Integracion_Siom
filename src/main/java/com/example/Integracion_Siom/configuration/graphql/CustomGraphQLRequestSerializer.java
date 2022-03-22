@@ -1,6 +1,6 @@
 package com.example.Integracion_Siom.configuration.graphql;
 
-import com.everis.adapters.model.symphony.FragmentNode;
+import com.example.Integracion_Siom.Model.Querys.FragmentNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;

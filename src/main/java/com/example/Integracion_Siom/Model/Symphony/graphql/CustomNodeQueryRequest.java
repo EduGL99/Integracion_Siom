@@ -1,7 +1,7 @@
 package com.example.Integracion_Siom.Model.Symphony.graphql;
 
-import com.everis.adapters.configuration.graphql.CustomGraphQLOperationRequest;
-import com.everis.adapters.model.symphony.FragmentNode;
+import com.example.Integracion_Siom.configuration.graphql.CustomGraphQLOperationRequest;
+import com.example.Integracion_Siom.Model.Querys.FragmentNode;
 import com.kobylynskyi.graphql.codegen.model.graphql.GraphQLOperation;
 
 import java.util.*;

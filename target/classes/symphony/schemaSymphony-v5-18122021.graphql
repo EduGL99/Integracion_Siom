@@ -1,0 +1,3422 @@
+# @stringValue directive is used to describe possible string values.
+directive @stringValue(
+  # The value of this constraint MUST be a non-negative integer. A string instance
+  # is valid against this constraint if its length is less than, or equal to maxLength.
+  # The length of a string instance is defined as the number of its characters.
+  maxLength: Int
+  # The value of this constraint MUST be a non-negative integer. A string instance
+  # is valid against this constraint if its length is greater than, or equal to minLength.
+  # The length of a string instance is defined as the number of its characters.
+  minLength: Int
+  # The value of this constraint MUST be a string.
+  # An instance is valid if it begins with the characters of the constraint's string.
+  startsWith: String
+  # The value of this constraint MUST be a string.
+  # An instance is valid if it ends with the characters of the constraint's string.
+  endsWith: String
+  # The value of this constraint MUST be a string. An instance is valid if
+  # constraint's value may be found within the instance string.
+  includes: String
+  # The value of this constraint MUST be a string. This string SHOULD be a valid regular expression.
+  # An instance is valid if the regular expression matches the instance successfully.
+  regex: String
+  # The value of this argument MUST be an array. This array SHOULD
+  # have at least one element. Elements in the array SHOULD be unique.
+  # An instance is valid only if its value is equal to one of the elements
+  # in this constraint's array value.
+  oneOf: [String!]
+  # A value is valid only if its equal to the value of the constrain.
+  equals: String
+) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+# @list directive is used to describe list values.
+directive @list(
+  # The value of this constraint MUST be a non-negative integer.
+  # An instance is valid if only its size is less than, or equal to,
+  # the value of this directive.
+  maxItems: Int
+  # The value of this constraint MUST be a non-negative integer.
+  # An instance is valid against minItems if its size is greater than,
+  # or equal to, the value of this constraint.
+  # Omitting this constraint has the same behavior as a value of 0.
+  minItems: Int
+  # The value of this constraint MUST be a boolean.
+  # If it has boolean value true, the instance is valid
+  # if all of its elements are unique.
+  uniqueItems: Boolean
+) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+directive @deprecatedInput(
+  name: String!
+  duplicateError: String!
+  newField: String
+) on INPUT_FIELD_DEFINITION
+directive @goModel(
+  model: String
+  models: [String!]
+) on OBJECT | INPUT_OBJECT | SCALAR | ENUM | INTERFACE | UNION
+# @numberValue directive is used to describe possible numeric values.
+directive @numberValue(
+  # The value of multipleOf MUST be a number, strictly greater than 0.
+  # A numeric instance is valid only if division by this constraint's
+  # value results in an integer.
+  multipleOf: Float
+  # The value of max MUST be a number, representing an inclusive upper
+  # limit for a numeric instance. A numeric instance is valid only if
+  # the instance is less than or exactly equal to max.
+  max: Float
+  # The value of min MUST be a number, representing an inclusive
+  # upper limit for a numeric instance. A numeric instance is
+  # valid only if the instance is greater than or exactly equal to min.
+  min: Float
+  # The value of exclusiveMax MUST be a number, representing an exclusive
+  # upper limit for a numeric instance. A numeric instance is valid only if
+  # it is strictly less than (not equal to) exclusiveMax.
+  exclusiveMax: Float
+  # The value of exclusiveMin MUST be a number, representing an exclusive
+  # upper limit for a numeric instance. A numeric instance is valid only
+  # if it has a value strictly greater than (not equal to) exclusiveMin.
+  exclusiveMin: Float
+  # The value of this argument MUST be an array. This array SHOULD
+  # have at least one element. Elements in the array SHOULD be unique.
+  # An instance is valid only if its value is equal to one of the elements
+  # in this constraint's array value.
+  oneOf: [Float!]
+  # A numeric instance is valid only if its value is equal to
+  # the value of the constrain.
+  equals: Float
+) on FIELD_DEFINITION | INPUT_FIELD_DEFINITION | ARGUMENT_DEFINITION
+directive @goField(
+  forceResolver: Boolean
+  name: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+directive @uniqueField(
+  typ: String!
+  field: String!
+) on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+type ActionBlock {
+  actionType: ActionType!
+  params: [VariableExpression!]!
+  entryPoint: EntryPoint!
+  exitPoint: ExitPoint!
+  workOrderType: WorkOrderType
+  workerType: WorkerType
+}
+
+input ActionBlockInput {
+  cid: String!
+  actionType: ActionTypeId!
+  params: [VariableExpressionInput!]!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+type ActionType {
+  id: ActionTypeId!
+  description: String!
+  variables: [VariableDefinition!]!
+}
+
+enum ActionTypeId {
+  work_order
+  update_inventory
+  update_workforce
+  worker
+}
+
+type Activity implements Node {
+  id: ID!
+  author: User
+  isCreate: Boolean!
+  activityType: ActivityField!
+  newRelatedNode: Node
+  oldRelatedNode: Node
+  oldValue: String
+  newValue: String
+  createTime: Time!
+  workOrder: WorkOrder!
+  clockDetails: ClockDetails
+}
+
+enum ActivityField {
+  STATUS
+  PRIORITY
+  ASSIGNEE
+  CREATION_DATE
+  OWNER
+  NAME
+  DESCRIPTION
+  CLOCK_IN
+  CLOCK_OUT
+}
+
+input ActivityFilterInput {
+  limit: Int!
+  orderDirection: OrderDirection!
+  activityType: ActivityField!
+}
+
+input AddBlockInstanceInput {
+  status: BlockInstanceStatus
+  inputs: [VariableValueInput!]
+  outputs: [VariableValueInput!]
+  blockId: ID!
+  startDate: Time!
+}
+
+input AddBulkServiceLinksAndPortsInput {
+  id: ID!
+  portIds: [ID!]
+  linkIds: [ID!]
+}
+
+input AddCustomerInput {
+  name: String!
+  externalId: String
+}
+
+input AddEquipmentInput {
+  name: String!
+  type: ID!
+  location: ID
+  parent: ID
+  positionDefinition: ID
+  properties: [PropertyInput!]
+  workOrder: ID
+  externalId: String
+}
+
+input AddEquipmentPortTypeInput {
+  name: String!
+  properties: [PropertyTypeInput!]
+  linkProperties: [PropertyTypeInput!]
+}
+
+input AddEquipmentTypeInput {
+  name: String!
+  category: String
+  positions: [EquipmentPositionInput!]
+  ports: [EquipmentPortInput!]
+  properties: [PropertyTypeInput!]
+}
+
+input AddFloorPlanInput {
+  name: String!
+  locationID: ID!
+  image: AddImageInput!
+  referenceX: Int!
+  referenceY: Int!
+  latitude: Float!
+  longitude: Float!
+  referencePoint1X: Int!
+  referencePoint1Y: Int!
+  referencePoint2X: Int!
+  referencePoint2Y: Int!
+  scaleInMeters: Float!
+}
+
+input AddFlowDraftInput {
+  name: String!
+  description: String
+  flowID: ID
+  endParamDefinitions: [VariableDefinitionInput!]!
+}
+
+input AddHyperlinkInput {
+  entityType: ImageEntity!
+  entityId: ID!
+  url: String!
+  displayName: String
+  category: String
+}
+
+input AddImageInput {
+  entityType: ImageEntity!
+  entityId: ID!
+  imgKey: String!
+  fileName: String!
+  fileSize: Int!
+  modified: Time!
+  contentType: String!
+  category: String
+  annotation: String
+}
+
+input AddLinkInput {
+  sides: [LinkSide!]!
+  workOrder: ID
+  properties: [PropertyInput!]
+  serviceIds: [ID!]
+}
+
+input AddLocationInput {
+  name: String!
+  type: ID!
+  parent: ID
+  latitude: Float
+  longitude: Float
+  properties: [PropertyInput!]
+  externalID: String
+}
+
+input AddLocationTypeInput {
+  name: String!
+  mapType: String
+  mapZoomLevel: Int
+  isSite: Boolean
+  properties: [PropertyTypeInput!]
+  surveyTemplateCategories: [SurveyTemplateCategoryInput!]
+}
+
+input AddPermissionsPolicyInput {
+  name: String!
+  description: String
+  isGlobal: Boolean
+  inventoryInput: InventoryPolicyInput
+  workforceInput: WorkforcePolicyInput
+  automationInput: AutomationPolicyInput
+  groups: [ID!]
+}
+
+input AddProjectInput {
+  name: String!
+  description: String
+  priority: ProjectPriority
+  creatorId: ID
+  type: ID!
+  location: ID
+  properties: [PropertyInput!]
+}
+
+input AddProjectTypeInput {
+  name: String!
+  description: String
+  properties: [PropertyTypeInput!]
+  workOrders: [WorkOrderDefinitionInput!]
+}
+
+input AddServiceEndpointInput {
+  id: ID!
+  portId: ID
+  equipmentID: ID!
+  definition: ID!
+}
+
+input AddUsersGroupInput {
+  name: String!
+  description: String
+  members: [ID!]
+  policies: [ID!]
+}
+
+input AddWorkerTypeInput {
+  name: String!
+  description: String
+  propertyTypes: [PropertyTypeInput!]
+}
+
+input AddWorkOrderInput {
+  name: String!
+  description: String
+  workOrderTypeId: ID!
+  locationId: ID
+  projectId: ID
+  properties: [PropertyInput!]
+  checkList: [CheckListItemInput!]
+  ownerId: ID
+  checkListCategories: [CheckListCategoryInput!]
+  assigneeId: ID
+  index: Int
+  status: WorkOrderStatus
+  priority: WorkOrderPriority
+}
+
+input AddWorkOrderTypeInput {
+  name: String!
+  description: String
+  properties: [PropertyTypeInput]
+  checkListCategories: [CheckListCategoryDefinitionInput!]
+  assigneeCanCompleteWorkOrder: Boolean
+}
+
+type AdministrativePolicy {
+  access: BasicPermissionRule!
+}
+
+type AutomationPolicy {
+  read: BasicPermissionRule!
+  templates: CUD!
+}
+
+input AutomationPolicyInput {
+  read: BasicPermissionRuleInput
+  templates: BasicCUDInput
+}
+
+input BasicCUDInput {
+  create: BasicPermissionRuleInput
+  update: BasicPermissionRuleInput
+  delete: BasicPermissionRuleInput
+}
+
+type BasicPermissionRule {
+  isAllowed: PermissionValue!
+}
+
+input BasicPermissionRuleInput {
+  isAllowed: PermissionValue!
+}
+
+type Block implements Node {
+  id: ID!
+  cid: String!
+  nextBlocks: [Block!]!
+  prevBlocks: [Block!]!
+  details: BlockDetails!
+  inputParamDefinitions: [VariableDefinition!]!
+  outputParamDefinitions: [VariableDefinition!]!
+  uiRepresentation: BlockUIRepresentation
+}
+
+union BlockDetails =
+    StartBlock
+  | EndBlock
+  | DecisionBlock
+  | GotoBlock
+  | SubflowBlock
+  | TriggerBlock
+  | ActionBlock
+  | TrueFalseBlock
+type BlockInstance implements Node {
+  id: ID!
+  status: BlockInstanceStatus!
+  inputs: [VariableValue!]!
+  outputs: [VariableValue!]!
+  failure_reason: String
+  block: Block!
+  startDate: Time!
+  endDate: Time
+}
+
+enum BlockInstanceStatus {
+  PENDING
+  IN_PROGRESS
+  FAILED
+  COMPLETED
+  WAITING
+}
+
+type BlockUIRepresentation {
+  name: String!
+  xPosition: Int!
+  yPosition: Int!
+}
+
+input BlockUIRepresentationInput {
+  name: String!
+  xPosition: Int!
+  yPosition: Int!
+}
+
+type BlockVariable {
+  block: Block!
+  type: VariableExpressionType!
+  inputVariableDefinition: VariableDefinition
+  inputPropertyTypeDefinition: PropertyType
+  checkListItemDefinition: CheckListItemDefinition
+}
+
+input BlockVariableInput {
+  blockCid: String!
+  type: VariableExpressionType!
+  variableDefinitionKey: String
+  propertyTypeId: Int
+  checkListItemDefinitionId: Int
+}
+
+enum CellularNetworkType {
+  CDMA
+  GSM
+  LTE
+  WCDMA
+}
+
+type CheckListCategory implements Node {
+  id: ID!
+  title: String!
+  description: String
+  checkList: [CheckListItem!]!
+}
+
+type CheckListCategoryDefinition {
+  id: ID!
+  title: String!
+  description: String
+  checklistItemDefinitions: [CheckListItemDefinition!]!
+}
+
+input CheckListCategoryDefinitionInput {
+  id: ID
+  title: String!
+  description: String
+  checkList: [CheckListDefinitionInput!]!
+}
+
+input CheckListCategoryInput {
+  id: ID
+  title: String!
+  description: String
+  checkList: [CheckListItemInput!]
+}
+
+input CheckListDefinitionInput {
+  id: ID
+  title: String!
+  type: CheckListItemType!
+  index: Int
+  isMandatory: Boolean
+  enumValues: String
+  enumSelectionMode: CheckListItemEnumSelectionMode
+  helpText: String
+}
+
+type CheckListItem implements Node {
+  id: ID!
+  title: String!
+  type: CheckListItemType!
+  index: Int
+  isMandatory: Boolean
+  helpText: String
+  enumValues: String
+  enumSelectionMode: CheckListItemEnumSelectionMode
+  selectedEnumValues: String
+  stringValue: String
+  checked: Boolean
+  files: [File!]
+  yesNoResponse: YesNoResponse
+  wifiData: [SurveyWiFiScan!]
+  cellData: [SurveyCellScan!]
+}
+
+type CheckListItemDefinition {
+  id: ID!
+  title: String!
+  type: CheckListItemType!
+  index: Int
+  isMandatory: Boolean
+  enumValues: String
+  enumSelectionMode: CheckListItemEnumSelectionMode
+  helpText: String
+}
+
+enum CheckListItemEnumSelectionMode {
+  single
+  multiple
+}
+
+input CheckListItemInput {
+  id: ID
+  title: String!
+  type: CheckListItemType!
+  index: Int
+  isMandatory: Boolean
+  helpText: String
+  enumValues: String
+  enumSelectionMode: CheckListItemEnumSelectionMode
+  selectedEnumValues: String
+  stringValue: String
+  checked: Boolean
+  files: [FileInput!]
+  yesNoResponse: YesNoResponse
+  wifiData: [SurveyWiFiScanData!]
+  cellData: [SurveyCellScanData!]
+}
+
+enum CheckListItemType {
+  simple
+  string
+  enum
+  files
+  yes_no
+  cell_scan
+  wifi_scan
+}
+
+type ClockActivity {
+  author: User!
+  details: ClockDetails!
+  time: Time!
+}
+
+type ClockDetails {
+  clockOutReason: ClockOutReason
+  distanceMeters: Float
+  comment: String
+}
+
+enum ClockOutReason {
+  PAUSE
+  SUBMIT
+  SUBMIT_INCOMPLETE
+  BLOCKED
+}
+
+type Comment implements Node {
+  id: ID!
+  author: User!
+  text: String!
+  createTime: Time!
+}
+
+enum CommentEntity {
+  WORK_ORDER
+  PROJECT
+}
+
+input CommentInput {
+  entityType: CommentEntity!
+  id: ID!
+  text: String!
+}
+
+type Connector {
+  source: ExitPoint!
+  target: EntryPoint!
+}
+
+input ConnectorInput {
+  sourceBlockCid: String!
+  sourcePoint: ExitPointInput
+  targetBlockCid: String!
+  targetPoint: EntryPointInput
+}
+
+type Coordinates {
+  latitude: Float!
+  longitude: Float!
+}
+
+type CUD {
+  create: BasicPermissionRule!
+  update: BasicPermissionRule!
+  delete: BasicPermissionRule!
+}
+
+# Position within a pagination.
+scalar Cursor
+
+type Customer implements Node {
+  id: ID!
+  name: String!
+  externalId: String
+}
+
+# A connection to a list of customers.
+type CustomerConnection {
+  # Total count of customers in all pages.
+  totalCount: Int!
+  # A list of customer edges.
+  edges: [CustomerEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A customer edge in a connection.
+type CustomerEdge {
+  # The customer at the end of the edge.
+  node: Customer
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type DecisionBlock {
+  entryPoint: EntryPoint!
+  defaultExitPoint: ExitPoint!
+  routes: [DecisionRoute!]!
+}
+
+input DecisionBlockInput {
+  cid: String!
+  routes: [DecisionRouteInput!]
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+type DecisionRoute {
+  exitPoint: ExitPoint
+}
+
+input DecisionRouteInput {
+  cid: String
+  condition: VariableExpressionInput!
+}
+
+enum DiscoveryMethod {
+  MANUAL
+  INVENTORY
+}
+
+enum DistanceUnit {
+  KILOMETER
+  MILE
+}
+
+type Edge {
+  name: String!
+  type: String!
+  ids: [ID!]!
+}
+
+input EditBlockInput {
+  id: ID!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+input EditBlockInstanceInput {
+  id: ID!
+  status: BlockInstanceStatus
+  inputs: [VariableValueInput!]
+  outputs: [VariableValueInput!]
+  failure_reason: String
+  endDate: Time
+}
+
+input EditEquipmentInput {
+  id: ID!
+  name: String!
+  properties: [PropertyInput!]
+  deviceID: String
+  externalId: String
+}
+
+input EditEquipmentPortInput {
+  side: LinkSide!
+  properties: [PropertyInput!]
+}
+
+input EditEquipmentPortTypeInput {
+  id: ID!
+  name: String!
+  properties: [PropertyTypeInput!]
+  linkProperties: [PropertyTypeInput!]
+}
+
+input EditEquipmentTypeInput {
+  id: ID!
+  name: String!
+  category: String
+  positions: [EquipmentPositionInput!]
+  ports: [EquipmentPortInput!]
+  properties: [PropertyTypeInput!]
+}
+
+input EditFlowInstanceInput {
+  id: ID!
+  serviceInstanceCode: String
+  status: FlowInstanceStatus
+  endDate: Time
+}
+
+input EditLinkInput {
+  id: ID!
+  properties: [PropertyInput!]
+  serviceIds: [ID!]
+}
+
+input EditLocationInput {
+  id: ID!
+  name: String!
+  latitude: Float!
+  longitude: Float!
+  properties: [PropertyInput!]
+  externalID: String
+}
+
+input EditLocationTypeInput {
+  id: ID!
+  name: String!
+  mapType: String
+  mapZoomLevel: Int
+  isSite: Boolean
+  properties: [PropertyTypeInput!]
+}
+
+input EditPermissionsPolicyInput {
+  id: ID!
+  name: String
+  description: String
+  isGlobal: Boolean
+  inventoryInput: InventoryPolicyInput
+  workforceInput: WorkforcePolicyInput
+  automationInput: AutomationPolicyInput
+  groups: [ID!]
+}
+
+input EditProjectInput {
+  id: ID!
+  name: String!
+  description: String
+  priority: ProjectPriority
+  creatorId: ID
+  type: ID!
+  location: ID
+  properties: [PropertyInput!]
+}
+
+input EditProjectTypeInput {
+  id: ID!
+  name: String!
+  description: String
+  properties: [PropertyTypeInput!]
+  workOrders: [WorkOrderDefinitionInput!]
+}
+
+input EditReportFilterInput {
+  id: ID!
+  name: String!
+}
+
+input EditUserInput {
+  id: ID!
+  firstName: String
+  lastName: String
+  status: UserStatus
+  role: UserRole
+  distanceUnit: DistanceUnit
+}
+
+input EditUsersGroupInput {
+  id: ID!
+  name: String
+  description: String
+  status: UsersGroupStatus
+  members: [ID!]
+  policies: [ID!]
+}
+
+input EditWorkerTypeInput {
+  id: ID!
+  name: String!
+  description: String
+  propertyTypes: [PropertyTypeInput!]
+}
+
+input EditWorkOrderInput {
+  id: ID!
+  name: String!
+  description: String
+  ownerId: ID
+  installDate: Time
+  assigneeId: ID
+  index: Int
+  status: WorkOrderStatus
+  priority: WorkOrderPriority
+  projectId: ID
+  properties: [PropertyInput!]
+  checkList: [CheckListItemInput!]
+  checkListCategories: [CheckListCategoryInput!]
+  locationId: ID
+}
+
+input EditWorkOrderTypeInput {
+  id: ID!
+  name: String!
+  description: String
+  properties: [PropertyTypeInput]
+  checkListCategories: [CheckListCategoryDefinitionInput!]
+  assigneeCanCompleteWorkOrder: Boolean
+}
+
+type EndBlock {
+  params: [VariableExpression!]!
+  entryPoint: EntryPoint!
+}
+
+input EndBlockInput {
+  cid: String!
+  params: [VariableExpressionInput!]!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+# End To End Path Descovery.
+type EndToEndPath {
+  # The links in the path
+  links: [Link]
+  # The start,end ports in the path
+  ports: [EquipmentPort]
+}
+
+type EntryPoint implements Node {
+  id: ID!
+  parentBlock: Block!
+  cid: String
+  prevExitPoints: [ExitPoint!]!
+}
+
+input EntryPointInput {
+  role: EntryPointRole
+  cid: String
+}
+
+enum EntryPointRole {
+  DEFAULT
+}
+
+type Equipment implements Node, NamedNode {
+  id: ID!
+  externalId: String
+  name: String!
+  parentLocation: Location
+  parentPosition: EquipmentPosition
+  equipmentType: EquipmentType!
+  positions: [EquipmentPosition]!
+  ports(availableOnly: Boolean = false): [EquipmentPort]!
+  descendentsIncludingSelf: [Equipment]!
+  properties: [Property]!
+  futureState: FutureState
+  workOrder: WorkOrder
+  locationHierarchy: [Location!]!
+  firstLocation: Location!
+  positionHierarchy: [EquipmentPosition!]!
+  services: [Service]!
+  images: [File]!
+  files: [File]!
+  hyperlinks: [Hyperlink!]!
+}
+
+# A connection to a list of equipments.
+type EquipmentConnection {
+  # Total count of equipment in all pages.
+  totalCount: Int!
+  # A list of equipment edges.
+  edges: [EquipmentEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# An equipment edge in a connection.
+type EquipmentEdge {
+  # The equipment at the end of the edge.
+  node: Equipment
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input EquipmentFilterInput {
+  filterType: EquipmentFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what type of equipment we filter about
+enum EquipmentFilterType {
+  EQUIP_INST_NAME
+  EQUIP_INST_EXTERNAL_ID
+  PROPERTY
+  LOCATION_INST
+  LOCATION_INST_EXTERNAL_ID
+  EQUIPMENT_TYPE
+}
+
+# Ordering options for equipment connections.
+input EquipmentOrder {
+  # The ordering direction.
+  direction: OrderDirection!
+  # The field to order equipment by.
+  field: EquipmentOrderField
+}
+
+# Properties by which equipment connections can be ordered.
+enum EquipmentOrderField {
+  # Order equipment by name.
+  NAME
+  # Order equipment by future state.
+  FUTURE_STATE
+}
+
+type EquipmentPort implements Node {
+  id: ID!
+  definition: EquipmentPortDefinition!
+  parentEquipment: Equipment!
+  link: Link
+  properties: [Property!]!
+  serviceEndpoints: [ServiceEndpoint!]!
+  services: [Service]!
+}
+
+# A connection to a list of equipment ports.
+type EquipmentPortConnection {
+  # Total count of equipment ports in all pages.
+  totalCount: Int!
+  # A list of equipment port edges.
+  edges: [EquipmentPortEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+input EquipmentPortConnectionInput {
+  id: ID
+  name: String
+}
+
+type EquipmentPortDefinition implements Node {
+  id: ID!
+  name: String!
+  index: Int
+  visibleLabel: String
+  portType: EquipmentPortType
+  bandwidth: String
+  connectedPorts: [EquipmentPortDefinition!]
+}
+
+# A connection to a list of equipment port definitions.
+type EquipmentPortDefinitionConnection {
+  # Total count of equipment port definitions in all pages.
+  totalCount: Int!
+  # A list of equipment port definition edges.
+  edges: [EquipmentPortDefinitionEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# An equipment port definition edge in a connection.
+type EquipmentPortDefinitionEdge {
+  # The equipment port definition at the end of the edge.
+  node: EquipmentPortDefinition
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+# An equipment port edge in a connection.
+type EquipmentPortEdge {
+  # The equipment port at the end of the edge.
+  node: EquipmentPort
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input EquipmentPortInput {
+  id: ID
+  name: String!
+  index: Int
+  visibleLabel: String
+  portTypeID: ID
+  bandwidth: String
+  connectedPorts: [EquipmentPortConnectionInput!]
+}
+
+type EquipmentPortType implements Node {
+  id: ID!
+  name: String!
+  propertyTypes: [PropertyType]!
+  linkPropertyTypes: [PropertyType]!
+  numberOfPortDefinitions: Int!
+}
+
+# A connection to a list of equipment port types.
+type EquipmentPortTypeConnection {
+  # Total count of equipment port types in all pages.
+  totalCount: Int!
+  # A list of equipment port type edges.
+  edges: [EquipmentPortTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# An equipment port type edge in a connection.
+type EquipmentPortTypeEdge {
+  # The equipment port type at the end of the edge.
+  node: EquipmentPortType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type EquipmentPosition implements Node {
+  id: ID!
+  definition: EquipmentPositionDefinition!
+  parentEquipment: Equipment!
+  attachedEquipment: Equipment
+}
+
+type EquipmentPositionDefinition implements Node {
+  id: ID!
+  name: String!
+  index: Int
+  visibleLabel: String
+}
+
+input EquipmentPositionInput {
+  id: ID
+  name: String!
+  index: Int
+  visibleLabel: String
+}
+
+type EquipmentSearchResult {
+  equipment: [Equipment]!
+  count: Int!
+}
+
+type EquipmentType implements Node {
+  id: ID!
+  name: String!
+  category: String
+  positionDefinitions: [EquipmentPositionDefinition]!
+  portDefinitions: [EquipmentPortDefinition]!
+  propertyTypes: [PropertyType]!
+  equipments: [Equipment]!
+  numberOfEquipment: Int!
+}
+
+# A connection to a list of equipment types.
+type EquipmentTypeConnection {
+  # Total count of equipment types in all pages.
+  totalCount: Int!
+  # A list of equipment type edges.
+  edges: [EquipmentTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# An equipment type edge in a connection.
+type EquipmentTypeEdge {
+  # The equipment type at the end of the edge.
+  node: EquipmentType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type ExitPoint implements Node {
+  id: ID!
+  parentBlock: Block!
+  cid: String
+  nextEntryPoints: [EntryPoint!]!
+  condition: VariableExpression
+}
+
+input ExitPointInput {
+  role: ExitPointRole
+  cid: String
+}
+
+enum ExitPointRole {
+  DEFAULT
+  DECISION
+}
+
+enum ExportStatus {
+  PENDING
+  IN_PROGRESS
+  SUCCEEDED
+  FAILED
+}
+
+type ExportTask implements Node {
+  id: ID!
+  type: ExportType!
+  status: ExportStatus!
+  progress: Float!
+  filters: [GeneralFilter!]!
+  storeKey: String!
+}
+
+enum ExportType {
+  EQUIPMENT
+  LOCATION
+  PORT
+  LINK
+  SERVICE
+  WORK_ORDER
+}
+
+type Field {
+  name: String!
+  value: String!
+  type: String!
+}
+
+type File implements Node {
+  id: ID!
+  fileName: String!
+  sizeInBytes: Int
+  modified: Time
+  uploaded: Time
+  fileType: FileType
+  mimeType: String
+  storeKey: String
+  category: String
+  annotation: String
+  workorder: WorkOrder
+}
+
+input FileInput {
+  id: ID
+  fileName: String!
+  sizeInBytes: Int
+  modificationTime: Int
+  uploadTime: Int
+  fileType: FileType
+  mimeType: String
+  storeKey: String!
+  annotation: String
+}
+
+enum FileType {
+  IMAGE
+  FILE
+}
+
+enum FilterEntity {
+  WORK_ORDER
+  PORT
+  EQUIPMENT
+  LINK
+  LOCATION
+  SERVICE
+}
+
+# operators to filter search by
+enum FilterOperator {
+  IS
+  CONTAINS
+  IS_ONE_OF
+  IS_NOT_ONE_OF
+  DATE_GREATER_THAN
+  DATE_LESS_THAN
+  DATE_GREATER_OR_EQUAL_THAN
+  DATE_LESS_OR_EQUAL_THAN
+}
+
+type FloorPlan implements Node {
+  id: ID!
+  name: String!
+  locationID: ID!
+  image: File!
+  referencePoint: FloorPlanReferencePoint!
+  scale: FloorPlanScale!
+}
+
+type FloorPlanReferencePoint {
+  x: Int!
+  y: Int!
+  latitude: Float!
+  longitude: Float!
+}
+
+type FloorPlanScale {
+  referencePoint1X: Int!
+  referencePoint1Y: Int!
+  referencePoint2X: Int!
+  referencePoint2Y: Int!
+  scaleInMeters: Float!
+}
+
+type Flow implements Node {
+  id: ID!
+  name: String!
+  description: String
+  endParamDefinitions: [VariableDefinition!]!
+  status: FlowStatus!
+  newInstancesPolicy: FlowNewInstancesPolicy!
+  blocks: [Block!]!
+  connectors: [Connector!]!
+  draft: FlowDraft
+}
+
+# A connection to a list of Flows.
+type FlowConnection {
+  # Total count of Flows in all pages.
+  totalCount: Int!
+  # A list of Flow edges.
+  edges: [FlowEdge!]
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+type FlowDraft implements Node {
+  id: ID!
+  name: String!
+  description: String
+  endParamDefinitions: [VariableDefinition!]!
+  blocks: [Block!]!
+  connectors: [Connector!]!
+  sameAsFlow: Boolean!
+}
+
+# A connection to a list of FlowDrafts.
+type FlowDraftConnection {
+  # Total count of FlowDrafts in all pages.
+  totalCount: Int!
+  # A list of FlowDraft edges.
+  edges: [FlowDraftEdge!]
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A flow draft edge in a connection.
+type FlowDraftEdge {
+  # The FlowDraft type at the end of the edge.
+  node: FlowDraft
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+# A flow edge in a connection.
+type FlowEdge {
+  # The Flow type at the end of the edge.
+  node: Flow
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type FlowExecutionTemplate implements Node {
+  id: ID!
+  name: String!
+  description: String
+  blocks: [Block!]!
+  connectors: [Connector!]!
+}
+
+type FlowInstance implements Node {
+  id: ID!
+  bssCode: String!
+  serviceInstanceCode: String
+  status: FlowInstanceStatus!
+  template: FlowExecutionTemplate!
+  blocks: [BlockInstance!]!
+  startDate: Time!
+  endDate: Time
+}
+
+# A connection to a list of Flows.
+type FlowInstanceConnection {
+  # Total count of Flows in all pages.
+  totalCount: Int!
+  # A list of Flow edges.
+  edges: [FlowInstanceEdge!]
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A flow edge in a connection.
+type FlowInstanceEdge {
+  # The Flow type at the end of the edge.
+  node: FlowInstance
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input FlowInstanceFilterInput {
+  filterType: FlowInstanceFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  idSet: [ID!]
+  stringSet: [String!]
+  propertyValue: PropertyTypeInput
+  timeValue: Time
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on flow instances
+enum FlowInstanceFilterType {
+  FLOW_INSTANCE_STATUS
+  FLOW_INSTANCE_TYPE
+  FLOW_INSTANCE_BSS_CODE
+  FLOW_INSTANCE_SERVICE_INSTANCE_CODE
+}
+
+# Ordering options for flow instance connections.
+input FlowInstanceOrder {
+  # The ordering direction.
+  direction: OrderDirection!
+  # The field to order work orders by.
+  field: FlowInstanceOrderField
+}
+
+# Properties by which flow instances connections can be ordered.
+enum FlowInstanceOrderField {
+  # Order flow instances by start time.
+  START_AT
+  # Order flow instances by end time.
+  END_AT
+  # Order flow instances by update time.
+  UPDATED_AT
+}
+
+enum FlowInstanceStatus {
+  IN_PROGRESS
+  FAILED
+  COMPLETED
+  CANCELED
+}
+
+enum FlowNewInstancesPolicy {
+  ENABLED
+  DISABLED
+}
+
+enum FlowStatus {
+  PUBLISHED
+  UNPUBLISHED
+  ARCHIVED
+}
+
+# FutureState of an equipment.
+enum FutureState {
+  INSTALL
+  REMOVE
+}
+
+type GeneralFilter {
+  filterType: String!
+  key: String!
+  operator: FilterOperator!
+  stringValue: String
+  idSet: [ID!]
+  stringSet: [String!]
+  boolValue: Boolean
+  propertyValue: PropertyType
+}
+
+input GeneralFilterInput {
+  filterType: String!
+  key: String!
+  operator: FilterOperator!
+  stringValue: String
+  idSet: [ID!]
+  stringSet: [String!]
+  boolValue: Boolean
+  propertyValue: PropertyTypeInput
+}
+
+type GotoBlock {
+  target: Block
+  entryPoint: EntryPoint!
+}
+
+input GotoBlockInput {
+  cid: String!
+  targetBlockCid: String
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+type Hyperlink implements Node {
+  id: ID!
+  url: String!
+  displayName: String
+  category: String
+  createTime: Time!
+}
+
+enum ImageEntity {
+  LOCATION
+  WORK_ORDER
+  SITE_SURVEY
+  EQUIPMENT
+  USER
+  CHECKLIST_ITEM
+}
+
+input ImportFlowDraftInput {
+  id: ID!
+  name: String!
+  description: String
+  endParamDefinitions: [VariableDefinitionInput!]!
+  startBlock: StartBlockInput
+  endBlocks: [EndBlockInput!]
+  decisionBlocks: [DecisionBlockInput!]
+  gotoBlocks: [GotoBlockInput!]
+  subflowBlocks: [SubflowBlockInput!]
+  triggerBlocks: [TriggerBlockInput!]
+  actionBlocks: [ActionBlockInput!]
+  trueFalseBlocks: [TrueFalseBlockInput!]
+  connectors: [ConnectorInput!]
+}
+
+type InventoryPolicy {
+  read: BasicPermissionRule!
+  location: LocationCUD!
+  equipment: CUD!
+  equipmentType: CUD!
+  locationType: CUD!
+  portType: CUD!
+  serviceType: CUD!
+}
+
+input InventoryPolicyInput {
+  read: BasicPermissionRuleInput
+  location: LocationCUDInput
+  equipment: BasicCUDInput
+  equipmentType: BasicCUDInput
+  locationType: BasicCUDInput
+  portType: BasicCUDInput
+  serviceType: BasicCUDInput
+}
+
+type LatestPythonPackageResult {
+  lastPythonPackage: PythonPackage
+  lastBreakingPythonPackage: PythonPackage
+}
+
+type Link implements Node {
+  id: ID!
+  ports: [EquipmentPort]!
+  futureState: FutureState
+  workOrder: WorkOrder
+  properties: [Property]!
+  services: [Service]!
+}
+
+# A connection to a list of links.
+type LinkConnection {
+  # Total count of links in all pages.
+  totalCount: Int!
+  # A list of link edges.
+  edges: [LinkEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A link edge in a connection.
+type LinkEdge {
+  # The link at the end of the edge.
+  node: Link
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input LinkFilterInput {
+  filterType: LinkFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on links
+enum LinkFilterType {
+  LINK_FUTURE_STATUS
+  EQUIPMENT_TYPE
+  LOCATION_INST
+  LOCATION_INST_EXTERNAL_ID
+  PROPERTY
+  SERVICE_INST
+  EQUIPMENT_INST
+}
+
+type LinkSearchResult {
+  links: [Link]!
+  count: Int!
+}
+
+input LinkSide {
+  equipment: ID!
+  port: ID!
+}
+
+type Location implements Node, NamedNode {
+  id: ID!
+  externalId: String
+  name: String!
+  locationType: LocationType!
+  parentLocation: Location
+  children: [Location]!
+  numChildren: Int!
+  latitude: Float!
+  longitude: Float!
+  parentCoords: Coordinates
+  equipments: [Equipment]!
+  properties: [Property]!
+  images: [File]!
+  files: [File]!
+  siteSurveyNeeded: Boolean!
+  topology(depth: Int! = 3): NetworkTopology!
+  locationHierarchy: [Location!]!
+  surveys: [Survey]!
+  wifiData: [SurveyWiFiScan]!
+  cellData: [SurveyCellScan]!
+  distanceKm(latitude: Float!, longitude: Float!): Float!
+  floorPlans: [FloorPlan]!
+  hyperlinks: [Hyperlink!]!
+}
+
+# A connection to a list of locations.
+type LocationConnection {
+  # Total count of locations in all pages.
+  totalCount: Int!
+  # A list of location edges.
+  edges: [LocationEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+type LocationCUD {
+  create: LocationPermissionRule!
+  update: LocationPermissionRule!
+  delete: LocationPermissionRule!
+}
+
+input LocationCUDInput {
+  create: BasicPermissionRuleInput
+  update: LocationPermissionRuleInput
+  delete: BasicPermissionRuleInput
+}
+
+# A location edge in a connection.
+type LocationEdge {
+  # The location at the end of the edge.
+  node: Location
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input LocationFilterInput {
+  filterType: LocationFilterType!
+  operator: FilterOperator!
+  boolValue: Boolean
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on locations
+enum LocationFilterType {
+  LOCATION_INST
+  LOCATION_INST_NAME
+  LOCATION_INST_EXTERNAL_ID
+  LOCATION_TYPE
+  LOCATION_INST_HAS_EQUIPMENT
+  PROPERTY
+}
+
+# Ordering options for location connections.
+input LocationOrder {
+  # The ordering direction.
+  direction: OrderDirection!
+  # The field to order locations by.
+  field: LocationOrderField
+}
+
+# Properties by which location connections can be ordered.
+enum LocationOrderField {
+  # Order locations by name.
+  NAME
+}
+
+type LocationPermissionRule {
+  isAllowed: PermissionValue!
+  locationTypeIds: [ID!]
+}
+
+input LocationPermissionRuleInput {
+  isAllowed: PermissionValue!
+  locationTypeIds: [ID!]
+}
+
+type LocationSearchResult {
+  locations: [Location]!
+  count: Int!
+}
+
+type LocationType implements Node {
+  id: ID!
+  name: String!
+  mapType: String
+  isSite: Boolean!
+  index: Int
+  mapZoomLevel: Int
+  propertyTypes: [PropertyType]!
+  numberOfLocations: Int!
+  locations(enforceHasLatLong: Boolean = false): LocationConnection
+  surveyTemplateCategories: [SurveyTemplateCategory]
+}
+
+# A connection to a list of location types.
+type LocationTypeConnection {
+  # Total count of location types in all pages.
+  totalCount: Int!
+  # A list of location type edges.
+  edges: [LocationTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A location type edge in a connection.
+type LocationTypeEdge {
+  # The location type at the end of the edge.
+  node: LocationType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input LocationTypeIndex {
+  locationTypeID: ID!
+  index: Int!
+}
+
+type Mutation {
+  editUser(input: EditUserInput!): User!
+  addUsersGroup(input: AddUsersGroupInput!): UsersGroup!
+  editUsersGroup(input: EditUsersGroupInput!): UsersGroup!
+  updateUserGroups(input: UpdateUserGroupsInput!): User!
+  deleteUsersGroup(id: ID!): Boolean!
+  createSurvey(data: SurveyCreateData!): ID!
+  addLocation(input: AddLocationInput!): Location!
+  editLocation(input: EditLocationInput!): Location!
+  removeLocation(id: ID!): ID!
+  addLocationType(input: AddLocationTypeInput!): LocationType!
+  editLocationType(input: EditLocationTypeInput!): LocationType!
+  removeLocationType(id: ID!): ID!
+  addEquipment(input: AddEquipmentInput!): Equipment!
+  editEquipment(input: EditEquipmentInput!): Equipment!
+  removeEquipment(id: ID!, workOrderId: ID): ID!
+  addEquipmentType(input: AddEquipmentTypeInput!): EquipmentType!
+  editEquipmentType(input: EditEquipmentTypeInput!): EquipmentType!
+  removeEquipmentType(id: ID!): ID!
+  addEquipmentPortType(input: AddEquipmentPortTypeInput!): EquipmentPortType!
+  editEquipmentPortType(input: EditEquipmentPortTypeInput!): EquipmentPortType!
+  removeEquipmentPortType(id: ID!): ID!
+  addLink(input: AddLinkInput!): Link!
+  editLink(input: EditLinkInput!): Link!
+  removeLink(id: ID!, workOrderId: ID): Link!
+  addService(
+    # data to create service
+    data: ServiceCreateData!
+  ): Service!
+  editService(
+    # data to edit service
+    data: ServiceEditData!
+  ): Service!
+  addServiceLink(id: ID!, linkId: ID!): Service!
+  removeServiceLink(id: ID!, linkId: ID!): Service!
+  addServiceEndpoint(input: AddServiceEndpointInput!): Service!
+  removeServiceEndpoint(serviceEndpointId: ID!): Service!
+  addServicePort(id: ID!, portId: ID!): Service!
+  addBulkServiceLinksAndPorts(input: AddBulkServiceLinksAndPortsInput): Service!
+  removeServicePort(id: ID!, portId: ID!): Service!
+  addServiceType(
+    # AddServiceEndpointInput
+    # data to edit service type
+    data: ServiceTypeCreateData!
+  ): ServiceType!
+  editServiceType(
+    # data to edit service type
+    data: ServiceTypeEditData!
+  ): ServiceType!
+  removeEquipmentFromPosition(
+    positionId: ID!
+    # id of the work order to remove this equipment
+    workOrderId: ID
+  ): EquipmentPosition!
+  moveEquipmentToPosition(
+    # id of the equipment of the position definition to attach to
+    parentEquipmentId: ID
+    # id of the position definition to attach to
+    positionDefinitionId: ID
+    # id of the equipment to that will be attached as a child to the position
+    equipmentId: ID!
+  ): EquipmentPosition!
+  addComment(input: CommentInput!): Comment!
+  addImage(input: AddImageInput!): File!
+  addHyperlink(input: AddHyperlinkInput!): Hyperlink!
+  deleteHyperlink(id: ID!): Hyperlink!
+  deleteImage(
+    # type of the entity whre image is at
+    entityType: ImageEntity!
+    # id of the entity whre image is at
+    entityId: ID!
+    # id of the image file
+    id: ID!
+  ): File!
+  removeWorkOrder(id: ID!): ID!
+  executeWorkOrder(id: ID!): WorkOrderExecutionResult!
+  removeWorkOrderType(id: ID!): ID!
+  markSiteSurveyNeeded(locationId: ID!, needed: Boolean!): Location!
+  removeService(id: ID!): ID!
+  removeServiceType(id: ID!): ID!
+  editLocationTypeSurveyTemplateCategories(
+    # id of the location type to edit
+    id: ID!
+    # survey categories and questions we want to configure for this type
+    surveyTemplateCategories: [SurveyTemplateCategoryInput!]!
+  ): [SurveyTemplateCategory!]
+  editEquipmentPort(input: EditEquipmentPortInput!): EquipmentPort!
+  removeSiteSurvey(id: ID!): ID!
+  addWiFiScans(
+    # wifi scan data
+    data: [SurveyWiFiScanData]!
+    # location of where wifi scan was collected
+    locationID: ID!
+  ): [SurveyWiFiScan]
+  addCellScans(
+    # cell scan data
+    data: [SurveyCellScanData]!
+    # location of where cell scan was collected
+    locationID: ID!
+  ): [SurveyCellScan]
+  moveLocation(
+    # ID of the location that will be moved
+    locationID: ID!
+    # ID of the location to be the new parent
+    parentLocationID: ID
+  ): Location!
+  editLocationTypesIndex(
+    # edit the location index to the location
+    locationTypesIndex: [LocationTypeIndex]!
+  ): [LocationType]
+  addWorkOrder(input: AddWorkOrderInput!): WorkOrder!
+  editWorkOrder(input: EditWorkOrderInput!): WorkOrder!
+  addWorkOrderType(input: AddWorkOrderTypeInput!): WorkOrderType!
+  editWorkOrderType(input: EditWorkOrderTypeInput!): WorkOrderType!
+  createProjectType(input: AddProjectTypeInput!): ProjectType!
+  editProjectType(input: EditProjectTypeInput!): ProjectType!
+  deleteProjectType(id: ID!): Boolean!
+  createProject(input: AddProjectInput!): Project!
+  editProject(input: EditProjectInput!): Project!
+  deleteProject(id: ID!): Boolean!
+  addCustomer(input: AddCustomerInput!): Customer!
+  removeCustomer(id: ID!): ID!
+  addFloorPlan(input: AddFloorPlanInput!): FloorPlan!
+  deleteFloorPlan(id: ID!): Boolean!
+  technicianWorkOrderCheckIn(
+    workOrderId: ID!
+    input: TechnicianWorkOrderCheckInInput
+  ): WorkOrder!
+  technicianWorkOrderCheckOut(
+    input: TechnicianWorkOrderCheckOutInput!
+  ): WorkOrder!
+  technicianWorkOrderUploadData(
+    input: TechnicianWorkOrderUploadInput!
+  ): WorkOrder!
+    @deprecated(
+      reason: "Use `technicianWorkOrderCheckOut` instead. Will be removed on 2020-11-01"
+    )
+  addReportFilter(input: ReportFilterInput!): ReportFilter!
+  editReportFilter(input: EditReportFilterInput!): ReportFilter!
+  deleteReportFilter(id: ID!): Boolean!
+  addPermissionsPolicy(input: AddPermissionsPolicyInput!): PermissionsPolicy!
+  editPermissionsPolicy(input: EditPermissionsPolicyInput!): PermissionsPolicy!
+  deletePermissionsPolicy(id: ID!): Boolean!
+  addStartBlock(flowDraftId: ID!, input: StartBlockInput!): Block!
+  addEndBlock(flowDraftId: ID!, input: EndBlockInput!): Block!
+  addDecisionBlock(flowDraftId: ID!, input: DecisionBlockInput!): Block!
+  addGotoBlock(flowDraftId: ID!, input: GotoBlockInput!): Block!
+  addSubflowBlock(flowDraftId: ID!, input: SubflowBlockInput!): Block!
+  addTriggerBlock(flowDraftId: ID!, input: TriggerBlockInput!): Block!
+  addActionBlock(flowDraftId: ID!, input: ActionBlockInput!): Block!
+  addTrueFalseBlock(flowDraftId: ID!, input: TrueFalseBlockInput!): Block!
+  editBlock(input: EditBlockInput!): Block!
+  deleteBlock(id: ID!): Boolean!
+  addConnector(flowDraftId: ID!, input: ConnectorInput!): Connector!
+  deleteConnector(flowDraftId: ID!, input: ConnectorInput!): Boolean!
+  addFlowDraft(input: AddFlowDraftInput!): FlowDraft!
+  publishFlow(input: PublishFlowInput!): Flow!
+  deleteFlowDraft(id: ID!): Boolean!
+  importFlowDraft(input: ImportFlowDraftInput!): FlowDraft!
+  startFlow(input: StartFlowInput!): FlowInstance!
+  editFlowInstance(input: EditFlowInstanceInput): FlowInstance!
+  addBlockInstance(
+    flowInstanceId: ID!
+    input: AddBlockInstanceInput!
+  ): BlockInstance!
+  editBlockInstance(input: EditBlockInstanceInput!): BlockInstance!
+  addWorkerType(input: AddWorkerTypeInput!): WorkerType!
+  editWorkerType(input: EditWorkerTypeInput!): WorkerType!
+  removeWorkerType(id: ID!): ID!
+  moveEquipmentToLocation(
+    # ID of the location that will the destination
+    locationID: ID!
+    # id of the equipment that will be moved
+    equipmentId: ID!
+  ): Equipment!
+}
+
+interface NamedNode {
+  # The id of the object.
+  id: ID!
+  # The name of the object.
+  name: String!
+}
+
+type NetworkTopology {
+  nodes: [Node!]!
+  links: [TopologyLink!]!
+}
+
+# An object with an ID
+interface Node {
+  # The id of the object.
+  id: ID!
+}
+
+# Possible directions in which to order a list of items when provided an `orderBy` argument.
+enum OrderDirection {
+  # Specifies an ascending order for a given `orderBy` argument.
+  ASC
+  # Specifies a descending order for a given `orderBy` argument.
+  DESC
+}
+
+# Information about pagination in a connection.
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+  # When paginating forwards, the cursor to continue.
+  startCursor: Cursor
+  # When paginating backwards, the cursor to continue.
+  endCursor: Cursor
+}
+
+type PermissionSettings {
+  adminPolicy: AdministrativePolicy!
+  inventoryPolicy: InventoryPolicy!
+  workforcePolicy: WorkforcePolicy!
+  automationPolicy: AutomationPolicy!
+}
+
+type PermissionsPolicy implements Node {
+  id: ID!
+  name: String!
+  description: String
+  isGlobal: Boolean!
+  policy: SystemPolicy!
+  groups: [UsersGroup!]!
+}
+
+# A connection to a list of permissions policies.
+type PermissionsPolicyConnection {
+  # Total count of permission policies in all pages.
+  totalCount: Int!
+  # A list of permissions policies type edges.
+  edges: [PermissionsPolicyEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A permission policy type edge in a connection.
+type PermissionsPolicyEdge {
+  # The permission policy type at the end of the edge.
+  node: PermissionsPolicy
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input PermissionsPolicyFilterInput {
+  filterType: PermissionsPolicyFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on permissionsPolicy
+enum PermissionsPolicyFilterType {
+  PERMISSIONS_POLICY_NAME
+}
+
+type PermissionsPolicySearchResult {
+  permissionsPolicies: [PermissionsPolicy]!
+  count: Int!
+}
+
+enum PermissionValue {
+  YES
+  NO
+  BY_CONDITION
+}
+
+input PortFilterInput {
+  filterType: PortFilterType!
+  operator: FilterOperator!
+  boolValue: Boolean
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on ports
+enum PortFilterType {
+  PORT_DEF
+  PORT_INST_HAS_LINK
+  PORT_INST_EQUIPMENT
+  LOCATION_INST
+  LOCATION_INST_EXTERNAL_ID
+  PROPERTY
+  SERVICE_INST
+}
+
+type PortSearchResult {
+  ports: [EquipmentPort]!
+  count: Int!
+}
+
+type Project implements Node, NamedNode {
+  id: ID!
+  name: String!
+  description: String
+  priority: ProjectPriority!
+  createdBy: User
+  createTime: Time!
+  type: ProjectType!
+  template: ProjectTemplate
+  location: Location
+  workOrders: [WorkOrder!]!
+  numberOfWorkOrders: Int!
+  properties: [Property!]!
+  comments: [Comment]!
+}
+
+# A connection to a list of projects.
+type ProjectConnection {
+  # Total count of projects in all pages.
+  totalCount: Int!
+  # A list of project edges.
+  edges: [ProjectEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A project edge in a connection.
+type ProjectEdge {
+  # The project at the end of the edge.
+  node: Project
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input ProjectFilterInput {
+  filterType: ProjectFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  idSet: [ID!]
+  maxDepth: Int = 5
+  stringSet: [String!]
+  propertyValue: PropertyTypeInput
+}
+
+enum ProjectFilterType {
+  PROJECT_NAME
+  PROJECT_OWNED_BY
+  PROJECT_TYPE
+  LOCATION_INST
+  PROJECT_PRIORITY
+  PROPERTY
+}
+
+# Ordering options for project connections.
+input ProjectOrder {
+  # The ordering direction.
+  direction: OrderDirection!
+  # The field to order projects by.
+  field: ProjectOrderField
+}
+
+# Properties by which project connections can be ordered.
+enum ProjectOrderField {
+  # Order projects by name.
+  NAME
+  # Order projects by creation time.
+  CREATED_AT
+  # Order projects by update time.
+  UPDATED_AT
+  # Order projects by priority.
+  PRIORITY
+  # Order projects by property type.
+  PROPERTY
+}
+
+enum ProjectPriority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+  NONE
+}
+
+type ProjectTemplate {
+  name: String!
+  description: String
+  properties: [PropertyType]!
+  workOrders: [WorkOrderDefinition]!
+}
+
+type ProjectType implements Node {
+  id: ID!
+  name: String!
+  description: String
+  projects: [Project!]!
+  numberOfProjects: Int!
+  properties: [PropertyType!]!
+  workOrders: [WorkOrderDefinition]!
+}
+
+# A connection to a list of project types.
+type ProjectTypeConnection {
+  # Total count of project types in all pages.
+  totalCount: Int!
+  # A list of project type edges.
+  edges: [ProjectTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A project type edge in a connection.
+type ProjectTypeEdge {
+  # The project type at the end of the edge.
+  node: ProjectType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type Property implements Node {
+  id: ID!
+  propertyType: PropertyType!
+  stringValue: String
+  intValue: Int
+  booleanValue: Boolean
+  floatValue: Float
+  latitudeValue: Float
+  longitudeValue: Float
+  rangeFromValue: Float
+  rangeToValue: Float
+  nodeValue: NamedNode
+  rawValue: String
+}
+
+enum PropertyEntity {
+  EQUIPMENT
+  SERVICE
+  LINK
+  PORT
+  LOCATION
+  WORK_ORDER
+  PROJECT
+}
+
+input PropertyInput {
+  id: ID
+  propertyTypeID: ID!
+  stringValue: String
+  intValue: Int
+  booleanValue: Boolean
+  floatValue: Float
+  latitudeValue: Float
+  longitudeValue: Float
+  rangeFromValue: Float
+  rangeToValue: Float
+  nodeIDValue: ID
+  isEditable: Boolean
+  isInstanceProperty: Boolean
+}
+
+enum PropertyKind {
+  string
+  int
+  bool
+  float
+  date
+  enum
+  range
+  email
+  gps_location
+  datetime_local
+  node
+}
+
+type PropertyType implements Node {
+  id: ID!
+  externalId: String
+  name: String!
+  type: PropertyKind!
+  nodeType: String
+  index: Int
+  category: String
+  rawValue: String
+  stringValue: String
+  intValue: Int
+  booleanValue: Boolean
+  floatValue: Float
+  latitudeValue: Float
+  longitudeValue: Float
+  rangeFromValue: Float
+  rangeToValue: Float
+  isEditable: Boolean
+  isInstanceProperty: Boolean
+  isMandatory: Boolean
+  isDeleted: Boolean
+}
+
+input PropertyTypeInput {
+  id: ID
+  externalId: String
+  name: String!
+  type: PropertyKind!
+  nodeType: String
+  index: Int
+  category: String
+  stringValue: String
+  intValue: Int
+  booleanValue: Boolean
+  floatValue: Float
+  latitudeValue: Float
+  longitudeValue: Float
+  rangeFromValue: Float
+  rangeToValue: Float
+  isEditable: Boolean
+  isInstanceProperty: Boolean
+  isMandatory: Boolean
+  isDeleted: Boolean
+}
+
+input PublishFlowInput {
+  flowDraftID: ID!
+  flowInstancesPolicy: FlowNewInstancesPolicy!
+}
+
+type PythonPackage {
+  version: String!
+  whlFileKey: String!
+  uploadTime: Time!
+  hasBreakingChange: Boolean!
+}
+
+type Query {
+  # Fetches current viewer.
+  me: Viewer
+  # Fetches an object given its ID.
+  node(
+    # ID of the object.
+    id: ID!
+  ): Node
+  user(authID: String!): User
+  actionType(id: ActionTypeId!): ActionType
+  triggerType(id: TriggerTypeId!): TriggerType
+  locationTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): LocationTypeConnection
+  # Fetches end to end path of links
+  endToEndPath(
+    # find to end to end path containing this link
+    linkId: ID
+    # find to end to end path containing this port
+    portId: ID
+  ): EndToEndPath
+  # A list of locations.
+  locations(
+    # Filter to only root locations.
+    onlyTopLevel: Boolean
+    # Filter to only locations under location types.
+    types: [ID!]
+    # Filter location containing case insensitive name.
+    name: String
+    # Filter by locations needing site survey.
+    needsSiteSurvey: Boolean
+    # Returns the elements in the list that come after the specified cursor.
+    after: Cursor
+    # Returns the first _n_ elements from the list.
+    first: Int
+    # Returns the elements in the list that come before the specified cursor.
+    before: Cursor
+    # Returns the last _n_ elements from the list.
+    last: Int
+    # Ordering options for the returned locations.
+    orderBy: LocationOrder
+    # Filtering options for the returned locations.
+    filterBy: [LocationFilterInput!]
+  ): LocationConnection
+  equipmentPortTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): EquipmentPortTypeConnection!
+  equipmentPortDefinitions(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): EquipmentPortDefinitionConnection!
+  equipmentPorts(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [PortFilterInput!]
+  ): EquipmentPortConnection!
+  equipmentTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): EquipmentTypeConnection!
+  # A list of equipment.
+  equipments(
+    # Returns the elements in the list that come after the specified cursor.
+    after: Cursor
+    # Returns the first _n_ elements from the list.
+    first: Int
+    # Returns the elements in the list that come before the specified cursor.
+    before: Cursor
+    # Returns the last _n_ elements from the list.
+    last: Int
+    # Ordering options for the returned equipment.
+    orderBy: EquipmentOrder
+    # Filtering options for the returned equipment.
+    filterBy: [EquipmentFilterInput!]
+  ): EquipmentConnection!
+  serviceTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): ServiceTypeConnection
+  # A list of work orders.
+  workOrders(
+    # Returns the elements in the list that come after the specified cursor.
+    after: Cursor
+    # Returns the first _n_ elements from the list.
+    first: Int
+    # Returns the elements in the list that come before the specified cursor.
+    before: Cursor
+    # Returns the last _n_ elements from the list.
+    last: Int
+    # Ordering options for the returned work orders.
+    orderBy: WorkOrderOrder
+    # Filtering options for the returned work orders.
+    filterBy: [WorkOrderFilterInput!]
+  ): WorkOrderConnection!
+  workOrderTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): WorkOrderTypeConnection!
+  links(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [LinkFilterInput!]
+  ): LinkConnection!
+  services(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [ServiceFilterInput!]
+  ): ServiceConnection!
+  users(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [UserFilterInput!]
+  ): UserConnection
+  usersGroups(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [UsersGroupFilterInput!]
+  ): UsersGroupConnection
+  permissionsPolicies(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    filterBy: [PermissionsPolicyFilterInput!]
+  ): PermissionsPolicyConnection
+  searchForNode(
+    name: String!
+    after: Cursor
+    first: Int = 10
+    before: Cursor
+    last: Int
+  ): SearchNodesConnection!
+  possibleProperties(entityType: PropertyEntity!): [PropertyType!]!
+  surveys: [Survey!]!
+  latestPythonPackage: LatestPythonPackageResult
+  pythonPackages: [PythonPackage!]!
+  nearestSites(
+    latitude: Float!
+    longitude: Float!
+    first: Int! = 10
+  ): [Location!]!
+  vertex(id: ID!): Vertex
+  projectTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): ProjectTypeConnection
+  # A list of projects.
+  projects(
+    # Returns the elements in the list that come after the specified cursor.
+    after: Cursor
+    # Returns the first _n_ elements from the list.
+    first: Int
+    # Returns the elements in the list that come before the specified cursor.
+    before: Cursor
+    # Returns the last _n_ elements from the list.
+    last: Int
+    # Ordering options for the returned projects.
+    orderBy: ProjectOrder
+    # Filtering options for the returned projects.
+    filterBy: [ProjectFilterInput!]
+    # Property value for ordering projects.
+    propertyValue: String
+    # Property direction for ordering projects.
+    propertyOrder: String
+  ): ProjectConnection!
+  customers(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): CustomerConnection
+  reportFilters(entity: FilterEntity!): [ReportFilter!]!
+  flowDrafts(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    # Filter flowDrafts by case sensitive name.
+    name: String
+  ): FlowDraftConnection!
+  flows(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    # Filter flows by case sensitive name.
+    name: String
+  ): FlowConnection!
+  flowInstances(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+    orderBy: FlowInstanceOrder
+    filterBy: [FlowInstanceFilterInput!]
+  ): FlowInstanceConnection!
+  workerTypes(
+    after: Cursor
+    first: Int
+    before: Cursor
+    last: Int
+  ): WorkerTypeConnection!
+}
+
+type ReportFilter implements Node {
+  id: ID!
+  name: String!
+  entity: FilterEntity!
+  filters: [GeneralFilter!]!
+}
+
+input ReportFilterInput {
+  name: String!
+  entity: FilterEntity!
+  filters: [GeneralFilterInput]
+}
+
+type SearchEntry {
+  entityId: ID!
+  entityType: String!
+  name: String!
+  type: String!
+  externalId: String
+}
+
+# A search node edge in a connection.
+type SearchNodeEdge {
+  # The search node at the end of the edge.
+  node: Node
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+# A connection to a list of search nodes.
+type SearchNodesConnection {
+  # Total count of search nodes in all pages.
+  totalCount: Int!
+  # A list of search node edges.
+  edges: [SearchNodeEdge!]
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# Modeling a specific service: e.g. a L2 VPN instance.
+type Service implements Node, NamedNode {
+  id: ID!
+  name: String!
+  externalId: String
+  status: ServiceStatus!
+  customer: Customer
+  serviceType: ServiceType!
+  upstream: [Service]!
+  downstream: [Service]!
+  properties: [Property]!
+  endpoints: [ServiceEndpoint]!
+  links: [Link]!
+  ports: [EquipmentPort]!
+  topology: NetworkTopology!
+}
+
+# A connection to a list of services.
+type ServiceConnection {
+  # Total count of services in all pages.
+  totalCount: Int!
+  # A list of service edges.
+  edges: [ServiceEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+input ServiceCreateData {
+  name: String!
+  externalId: String
+  status: ServiceStatus! = PENDING
+  serviceTypeId: ID!
+  customerId: ID
+  upstreamServiceIds: [ID!]!
+  properties: [PropertyInput]
+}
+
+# A service edge in a connection.
+type ServiceEdge {
+  # The service at the end of the edge.
+  node: Service
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input ServiceEditData {
+  id: ID!
+  name: String
+  externalId: String
+  status: ServiceStatus
+  customerId: ID
+  upstreamServiceIds: [ID!]
+  properties: [PropertyInput]
+}
+
+type ServiceEndpoint implements Node {
+  id: ID!
+  port: EquipmentPort
+  equipment: Equipment!
+  service: Service!
+  definition: ServiceEndpointDefinition!
+}
+
+type ServiceEndpointDefinition implements Node {
+  id: ID!
+  index: Int!
+  role: String
+  name: String!
+  endpoints: [ServiceEndpoint]!
+  equipmentType: EquipmentType!
+  serviceType: ServiceType!
+}
+
+input ServiceEndpointDefinitionInput {
+  id: ID
+  name: String!
+  role: String
+  index: Int!
+  equipmentTypeID: ID!
+}
+
+input ServiceFilterInput {
+  filterType: ServiceFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on services
+enum ServiceFilterType {
+  SERVICE_INST_NAME
+  SERVICE_STATUS
+  SERVICE_DISCOVERY_METHOD
+  SERVICE_TYPE
+  SERVICE_INST_EXTERNAL_ID
+  SERVICE_INST_CUSTOMER_NAME
+  PROPERTY
+  LOCATION_INST
+  LOCATION_INST_EXTERNAL_ID
+  EQUIPMENT_IN_SERVICE
+}
+
+type ServiceSearchResult {
+  services: [Service]!
+  count: Int!
+}
+
+enum ServiceStatus {
+  PENDING
+  IN_SERVICE
+  MAINTENANCE
+  DISCONNECTED
+}
+
+# Service type schema: e.g. L2 VPN.
+type ServiceType implements Node {
+  id: ID!
+  name: String!
+  isDeleted: Boolean!
+  hasCustomer: Boolean!
+  propertyTypes: [PropertyType]!
+  services: [Service]!
+  numberOfServices: Int!
+  endpointDefinitions: [ServiceEndpointDefinition!]!
+  discoveryMethod: DiscoveryMethod!
+}
+
+# A connection to a list of service types.
+type ServiceTypeConnection {
+  # Total count of service types in all pages.
+  totalCount: Int!
+  # A list of service type edges.
+  edges: [ServiceTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+input ServiceTypeCreateData {
+  name: String!
+  hasCustomer: Boolean!
+  properties: [PropertyTypeInput]
+  endpoints: [ServiceEndpointDefinitionInput]
+  discoveryMethod: DiscoveryMethod
+}
+
+# A service type edge in a connection.
+type ServiceTypeEdge {
+  # The service type at the end of the edge.
+  node: ServiceType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input ServiceTypeEditData {
+  id: ID!
+  name: String!
+  hasCustomer: Boolean!
+  properties: [PropertyTypeInput]
+  endpoints: [ServiceEndpointDefinitionInput]
+}
+
+type StartBlock {
+  paramDefinitions: [VariableDefinition!]!
+  exitPoint: ExitPoint!
+}
+
+input StartBlockInput {
+  cid: String!
+  paramDefinitions: [VariableDefinitionInput!]!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+input StartFlowInput {
+  flowID: ID!
+  bssCode: String!
+  startDate: Time!
+  params: [VariableValueInput]!
+}
+
+type SubflowBlock {
+  flow: Flow
+  params: [VariableExpression!]!
+  entryPoint: EntryPoint!
+  exitPoint: ExitPoint!
+}
+
+input SubflowBlockInput {
+  cid: String!
+  flowId: ID!
+  params: [VariableExpressionInput!]!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+type Subscription {
+  workOrderAdded: WorkOrder
+  workOrderDone: WorkOrder
+  workOrderStatusChanged: WorkOrderStatusChangedPayload!
+  flowInstanceDone: FlowInstance!
+  projectAdded: Project
+  projectChanged: Project
+  locationAdded: Location
+  locationChanged: Location
+  AddImage: File
+}
+
+type Survey implements Node {
+  id: ID!
+  name: String!
+  ownerName: String
+  creationTimestamp: Int
+  completionTimestamp: Int!
+  locationID: ID!
+  sourceFile: File
+  surveyResponses: [SurveyQuestion]!
+}
+
+type SurveyCellScan implements Node {
+  id: ID!
+  networkType: CellularNetworkType!
+  signalStrength: Int!
+  timestamp: Int
+  baseStationID: String
+  networkID: String
+  systemID: String
+  cellID: String
+  locationAreaCode: String
+  mobileCountryCode: String
+  mobileNetworkCode: String
+  primaryScramblingCode: String
+  operator: String
+  arfcn: Int
+  physicalCellID: String
+  trackingAreaCode: String
+  timingAdvance: Int
+  earfcn: Int
+  uarfcn: Int
+  latitude: Float
+  longitude: Float
+  altitude: Float
+  heading: Float
+  rssi: Float
+}
+
+input SurveyCellScanData {
+  networkType: CellularNetworkType!
+  signalStrength: Int!
+  timestamp: Int
+  baseStationID: String
+  networkID: String
+  systemID: String
+  cellID: String
+  locationAreaCode: String
+  mobileCountryCode: String
+  mobileNetworkCode: String
+  primaryScramblingCode: String
+  operator: String
+  arfcn: Int
+  physicalCellID: String
+  trackingAreaCode: String
+  timingAdvance: Int
+  earfcn: Int
+  uarfcn: Int
+  latitude: Float
+  longitude: Float
+  altitude: Float
+  heading: Float
+  rssi: Float
+}
+
+input SurveyCreateData {
+  name: String!
+  ownerName: String
+  creationTimestamp: Int
+  completionTimestamp: Int!
+  status: SurveyStatus
+  locationID: ID!
+  surveyResponses: [SurveyQuestionResponse!]!
+}
+
+type SurveyQuestion implements Node {
+  id: ID!
+  formName: String
+  formDescription: String
+  formIndex: Int!
+  questionFormat: SurveyQuestionType
+  questionText: String!
+  questionIndex: Int!
+  boolData: Boolean
+  emailData: String
+  latitude: Float
+  longitude: Float
+  locationAccuracy: Float
+  altitude: Float
+  phoneData: String
+  textData: String
+  floatData: Float
+  intData: Int
+  dateData: Int
+  photoData: File
+  wifiData: [SurveyWiFiScan]
+  cellData: [SurveyCellScan]
+  images: [File!]
+}
+
+input SurveyQuestionResponse {
+  formName: String
+  formDescription: String
+  formIndex: Int!
+  questionFormat: SurveyQuestionType
+  questionText: String!
+  questionIndex: Int!
+  boolData: Boolean
+  emailData: String
+  latitude: Float
+  longitude: Float
+  locationAccuracy: Float
+  altitude: Float
+  phoneData: String
+  textData: String
+  floatData: Float
+  intData: Int
+  dateData: Int
+  photoData: FileInput
+  wifiData: [SurveyWiFiScanData!]
+  cellData: [SurveyCellScanData!]
+  imagesData: [FileInput!]
+}
+
+enum SurveyQuestionType {
+  BOOL
+  EMAIL
+  COORDS
+  PHONE
+  TEXT
+  TEXTAREA
+  PHOTO
+  WIFI
+  CELLULAR
+  FLOAT
+  INTEGER
+  DATE
+}
+
+enum SurveyStatus {
+  PLANNED
+  INPROGRESS
+  COMPLETED
+}
+
+type SurveyTemplateCategory implements Node {
+  id: ID!
+  categoryTitle: String!
+  categoryDescription: String!
+  surveyTemplateQuestions: [SurveyTemplateQuestion]
+}
+
+input SurveyTemplateCategoryInput {
+  id: ID
+  categoryTitle: String!
+  categoryDescription: String!
+  surveyTemplateQuestions: [SurveyTemplateQuestionInput]
+}
+
+type SurveyTemplateQuestion implements Node {
+  id: ID!
+  questionTitle: String!
+  questionDescription: String!
+  questionType: SurveyQuestionType!
+  index: Int!
+}
+
+input SurveyTemplateQuestionInput {
+  id: ID
+  questionTitle: String!
+  questionDescription: String!
+  questionType: SurveyQuestionType!
+  index: Int!
+}
+
+type SurveyWiFiScan implements Node {
+  id: ID!
+  timestamp: Int!
+  frequency: Int!
+  channel: Int!
+  bssid: String!
+  strength: Int!
+  ssid: String
+  band: String
+  channelWidth: Int
+  capabilities: String
+  latitude: Float
+  longitude: Float
+  altitude: Float
+  heading: Float
+  rssi: Float
+}
+
+input SurveyWiFiScanData {
+  timestamp: Int!
+  frequency: Int!
+  channel: Int!
+  bssid: String!
+  strength: Int!
+  ssid: String
+  band: String
+  channelWidth: Int
+  capabilities: String
+  latitude: Float
+  longitude: Float
+  altitude: Float
+  heading: Float
+  rssi: Float
+}
+
+union SystemPolicy = InventoryPolicy | WorkforcePolicy | AutomationPolicy
+input TechnicianCheckListItemInput {
+  id: ID!
+  selectedEnumValues: String
+  stringValue: String
+  checked: Boolean
+  yesNoResponse: YesNoResponse
+  wifiData: [SurveyWiFiScanData!]
+  cellData: [SurveyCellScanData!]
+  filesData: [FileInput!]
+}
+
+input TechnicianWorkOrderCheckInInput {
+  distanceMeters: Float
+  checkInTime: Time
+}
+
+input TechnicianWorkOrderCheckOutInput {
+  workOrderId: ID!
+  reason: ClockOutReason!
+  checkListCategories: [CheckListCategoryInput!]
+  comment: String
+  distanceMeters: Float
+  checkOutTime: Time
+}
+
+input TechnicianWorkOrderUploadInput {
+  workOrderId: ID!
+  checkListCategories: [CheckListCategoryInput!]
+}
+
+scalar Time
+
+type TopologyLink {
+  type: TopologyLinkType!
+  source: Node!
+  target: Node!
+}
+
+enum TopologyLinkType {
+  PHYSICAL
+}
+
+type TriggerBlock {
+  triggerType: TriggerType!
+  params: [VariableExpression!]!
+  exitPoint: ExitPoint!
+}
+
+input TriggerBlockInput {
+  cid: String!
+  triggerType: TriggerTypeId!
+  params: [VariableExpressionInput!]!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+type TriggerType {
+  id: TriggerTypeId!
+  description: String!
+  variables: [VariableDefinition!]!
+}
+
+enum TriggerTypeId {
+  work_order
+}
+
+type TrueFalseBlock {
+  entryPoint: EntryPoint!
+  trueExitPoint: ExitPoint!
+  falseExitPoint: ExitPoint!
+}
+
+input TrueFalseBlockInput {
+  cid: String!
+  uiRepresentation: BlockUIRepresentationInput
+}
+
+input UpdateUserGroupsInput {
+  id: ID!
+  addGroupIds: [ID!]!
+  removeGroupIds: [ID!]!
+}
+
+type User implements Node, NamedNode {
+  id: ID!
+  authID: String!
+  firstName: String!
+  lastName: String!
+  name: String!
+  email: String!
+  status: UserStatus!
+  role: UserRole!
+  profilePhoto: File
+  groups: [UsersGroup]!
+  distanceUnit: DistanceUnit
+}
+
+# A connection to a list of users.
+type UserConnection {
+  # Total count of users in all pages.
+  totalCount: Int!
+  # A list of user type edges.
+  edges: [UserEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A work order type edge in a connection.
+type UserEdge {
+  # The user type at the end of the edge.
+  node: User
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input UserFilterInput {
+  filterType: UserFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  propertyValue: PropertyTypeInput
+  statusValue: UserStatus
+  idSet: [ID!]
+  stringSet: [String!]
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on users
+enum UserFilterType {
+  USER_NAME
+  USER_STATUS
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  OWNER
+}
+
+type UserSearchResult {
+  users: [User]!
+  count: Int!
+}
+
+type UsersGroup implements Node {
+  id: ID!
+  name: String!
+  description: String
+  status: UsersGroupStatus!
+  members: [User!]!
+  policies: [PermissionsPolicy!]!
+}
+
+# A connection to a list of users groups.
+type UsersGroupConnection {
+  # Total count of user groups in all pages.
+  totalCount: Int!
+  # A list of users group type edges.
+  edges: [UsersGroupEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A work order type edge in a connection.
+type UsersGroupEdge {
+  # The user type at the end of the edge.
+  node: UsersGroup
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+input UsersGroupFilterInput {
+  filterType: UsersGroupFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  maxDepth: Int = 5
+}
+
+# what filters should we apply on usersGroups
+enum UsersGroupFilterType {
+  GROUP_NAME
+}
+
+type UsersGroupSearchResult {
+  usersGroups: [UsersGroup]!
+  count: Int!
+}
+
+enum UsersGroupStatus {
+  ACTIVE
+  DEACTIVATED
+}
+
+enum UserStatus {
+  ACTIVE
+  DEACTIVATED
+}
+
+type VariableDefinition {
+  key: String!
+  name: String!
+  type: VariableType!
+  mandatory: Boolean!
+  multipleValues: Boolean!
+  choices: [String!]
+  defaultValue: String
+  usage: VariableUsage!
+  nestedVariables(value: String!): [VariableDefinition!]!
+}
+
+input VariableDefinitionInput {
+  key: String!
+  type: VariableType!
+  mandatory: Boolean
+  multipleValues: Boolean
+  choices: [String!]
+  defaultValue: String
+}
+
+type VariableExpression {
+  type: VariableExpressionType!
+  variableDefinition: VariableDefinition
+  propertyTypeDefinition: PropertyType
+  expression: String!
+  blockVariables: [BlockVariable!]
+}
+
+input VariableExpressionInput {
+  type: VariableExpressionType!
+  variableDefinitionKey: String
+  propertyTypeId: Int
+  expression: String!
+  blockVariables: [BlockVariableInput!]
+}
+
+# what type variableExpression should we apply
+enum VariableExpressionType {
+  VariableDefinition
+  PropertyTypeDefinition
+  DecisionDefinition
+  ChekListItemDefinition
+}
+
+enum VariableType {
+  STRING
+  INT
+  DATE
+  WORK_ORDER
+  WORK_ORDER_TYPE
+  LOCATION
+  PROJECT
+  USER
+}
+
+enum VariableUsage {
+  INPUT
+  OUTPUT
+  INPUT_AND_OUTPUT
+}
+
+type VariableValue {
+  variableDefinitionKey: String!
+  value: String!
+}
+
+input VariableValueInput {
+  variableDefinitionKey: String!
+  value: String!
+}
+
+type Vertex {
+  id: ID!
+  type: String!
+  fields: [Field!]!
+  edges: [Edge!]!
+}
+
+type Viewer {
+  tenant: String!
+  user: User
+  permissions: PermissionSettings!
+}
+
+type WorkerType implements Node {
+  id: ID!
+  name: String!
+  description: String
+  propertyTypes: [PropertyType]!
+}
+
+# A connection to a list of worker types.
+type WorkerTypeConnection {
+  # Total count of worker types in all pages.
+  totalCount: Int!
+  # A list of worker type edges.
+  edges: [WorkerTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# An worker type edge in a connection.
+type WorkerTypeEdge {
+  # The worker type at the end of the edge.
+  node: WorkerType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type WorkforceCUD {
+  create: WorkforcePermissionRule!
+  update: WorkforcePermissionRule!
+  delete: WorkforcePermissionRule!
+  assign: WorkforcePermissionRule!
+  transferOwnership: WorkforcePermissionRule!
+}
+
+input WorkforceCUDInput {
+  create: BasicPermissionRuleInput
+  update: BasicPermissionRuleInput
+  delete: BasicPermissionRuleInput
+  assign: BasicPermissionRuleInput
+  transferOwnership: BasicPermissionRuleInput
+}
+
+type WorkforcePermissionRule {
+  isAllowed: PermissionValue!
+  projectTypeIds: [ID!]
+  workOrderTypeIds: [ID!]
+}
+
+input WorkforcePermissionRuleInput {
+  isAllowed: PermissionValue!
+  projectTypeIds: [ID!]
+  workOrderTypeIds: [ID!]
+}
+
+type WorkforcePolicy {
+  read: WorkforcePermissionRule!
+  data: WorkforceCUD!
+  templates: CUD!
+}
+
+input WorkforcePolicyInput {
+  read: WorkforcePermissionRuleInput
+  data: WorkforceCUDInput
+  templates: BasicCUDInput
+}
+
+# Work Order instance - capturing information about a change in the network
+type WorkOrder implements Node, NamedNode {
+  id: ID!
+  workOrderType: WorkOrderType!
+  workOrderTemplate: WorkOrderTemplate
+  name: String!
+  description: String
+  owner: User!
+  creationDate: Time!
+  installDate: Time
+  assignedTo: User
+  index: Int!
+  status: WorkOrderStatus!
+  priority: WorkOrderPriority!
+  equipmentToAdd: [Equipment]!
+  equipmentToRemove: [Equipment]!
+  linksToAdd: [Link]!
+  linksToRemove: [Link]!
+  images: [File]!
+  files: [File]!
+  comments: [Comment]!
+  activities(filter: ActivityFilterInput): [Activity!]!
+  location: Location
+  properties: [Property]!
+  project: Project
+  checkListCategories: [CheckListCategory!]!
+  hyperlinks: [Hyperlink!]!
+  closeDate: Time
+}
+
+# A connection to a list of work orders.
+type WorkOrderConnection {
+  # Total count of work orders in all pages.
+  totalCount: Int!
+  # A list of work order edges.
+  edges: [WorkOrderEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+type WorkOrderDefinition implements Node {
+  id: ID!
+  index: Int
+  type: WorkOrderType!
+}
+
+input WorkOrderDefinitionInput {
+  id: ID
+  index: Int
+  type: ID!
+}
+
+# A work order edge in a connection.
+type WorkOrderEdge {
+  # The work order at the end of the edge.
+  node: WorkOrder
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+type WorkOrderExecutionResult {
+  id: ID!
+  name: String!
+  equipmentAdded: [Equipment!]!
+  equipmentRemoved: [ID!]!
+  linkAdded: [Link!]!
+  linkRemoved: [ID!]!
+}
+
+input WorkOrderFilterInput {
+  filterType: WorkOrderFilterType!
+  operator: FilterOperator!
+  stringValue: String
+  idSet: [ID!]
+  stringSet: [String!]
+  propertyValue: PropertyTypeInput
+  timeValue: Time
+  maxDepth: Int = 5
+}
+
+# what type of work order we filter about
+enum WorkOrderFilterType {
+  WORK_ORDER_NAME
+  WORK_ORDER_STATUS
+  WORK_ORDER_OWNED_BY
+  WORK_ORDER_TYPE
+  WORK_ORDER_CREATION_DATE
+  WORK_ORDER_CLOSE_DATE
+  WORK_ORDER_ASSIGNED_TO
+  WORK_ORDER_LOCATION_INST
+  WORK_ORDER_PRIORITY
+  LOCATION_INST
+  LOCATION_INST_EXTERNAL_ID
+}
+
+# Ordering options for work order connections.
+input WorkOrderOrder {
+  # The ordering direction.
+  direction: OrderDirection!
+  # The field to order work orders by.
+  field: WorkOrderOrderField
+}
+
+# Properties by which work order connections can be ordered.
+enum WorkOrderOrderField {
+  # Order work orders by creation time.
+  CREATED_AT
+  # Order work orders by update time.
+  UPDATED_AT
+  # Order work orders by closure time.
+  CLOSED_AT
+  # Order work orders by name.
+  NAME
+}
+
+# Work Order priority
+enum WorkOrderPriority {
+  URGENT
+  HIGH
+  MEDIUM
+  LOW
+  NONE
+}
+
+type WorkOrderSearchResult {
+  workOrders: [WorkOrder]!
+  count: Int!
+}
+
+# Work Order status
+enum WorkOrderStatus {
+  PLANNED
+  IN_PROGRESS
+  PENDING
+    @deprecated(
+      reason: "Use new status `IN_PROGRESS` instead. Will be removed on 2020-11-01"
+    )
+  SUBMITTED
+  CLOSED
+  DONE
+    @deprecated(
+      reason: "Use new status `CLOSED`, `SUBMITTED` or `BLOCKED` instead. Will be removed on 2020-11-01"
+    )
+  BLOCKED
+  CANCELED
+  SUSPENDED
+}
+
+# Payload of the workOrderStatusChanged subscription.
+type WorkOrderStatusChangedPayload {
+  # Previous status of the work order.
+  from: WorkOrderStatus
+  # Current status of the work order.
+  to: WorkOrderStatus!
+  # The work order of which status was modified.
+  workOrder: WorkOrder!
+}
+
+type WorkOrderTemplate {
+  name: String!
+  description: String
+  propertyTypes: [PropertyType]!
+  checkListCategoryDefinitions: [CheckListCategoryDefinition!]!
+  assigneeCanCompleteWorkOrder: Boolean
+}
+
+# Work Order type schema: e.g. construction work.
+type WorkOrderType implements Node {
+  id: ID!
+  name: String!
+  description: String
+  propertyTypes: [PropertyType]!
+  numberOfWorkOrders: Int!
+  checkListCategoryDefinitions: [CheckListCategoryDefinition!]!
+  assigneeCanCompleteWorkOrder: Boolean
+}
+
+# A connection to a list of work order types.
+type WorkOrderTypeConnection {
+  # Total count of work order types in all pages.
+  totalCount: Int!
+  # A list of work order type edges.
+  edges: [WorkOrderTypeEdge!]!
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+}
+
+# A work order type edge in a connection.
+type WorkOrderTypeEdge {
+  # The work order type at the end of the edge.
+  node: WorkOrderType
+  # A cursor for use in pagination.
+  cursor: Cursor!
+}
+
+enum YesNoResponse {
+  YES
+  NO
+}
+

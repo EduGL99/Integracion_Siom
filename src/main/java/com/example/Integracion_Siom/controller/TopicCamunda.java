@@ -14,10 +14,6 @@ public class TopicCamunda implements ExternalTaskHandler {
 
     @Override
     public void execute(ExternalTask extTask, ExternalTaskService extTaskService){
-        String name = extTask.getVariable("name");
-        String age = extTask.getVariable("edad");
-        System.out.println("name"+name);
-        System.out.println("edad"+age);
 
 
         VariableMap variables = Variables.createVariables();

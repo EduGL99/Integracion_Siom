@@ -7,6 +7,7 @@ import com.example.Integracion_Siom.model.tmfxxx.WorkTicket;
 import com.example.Integracion_Siom.service.impl.SymphonyUserService;
 import com.example.Integracion_Siom.service.impl.SymphonyWorkOrderService;
 import com.example.Integracion_Siom.service.impl.WorkTicketService;
+import com.example.Integracion_Siom.symphony.WorkOrderGraphToTMFxxx;
 import com.example.Integracion_Siom.symphony.WorkOrderTypeGraphToTMFxxx;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,28 +31,15 @@ import java.util.List;
 @Component
 @ExternalTaskSubscription("CheckProyectService")
 public class ExecuteMicroService implements ExternalTaskHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkTicketController.class);
-
-    @Autowired
-    WorkTicketService workTicketService;
 
     @Override
     public void execute(ExternalTask extTask, ExternalTaskService extTaskService) {
-
-        WorkTicketService workTicketService = new WorkTicketService();
-
-        SymphonyUserService w = new SymphonyUserService();
-        try {
-            workTicketService.getWorkTicket("223338318668",extTask.getExtensionProperties());
-            w.getUser("214748364805");
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        Gson g = new Gson();
+        Gson json = new Gson();
         String workOrderJson = extTask.getVariable("workOrder").toString();
-        WorkTicket workTicket = g.fromJson(workOrderJson,WorkTicket.class);
+        WorkOrderGraphToTMFxxx workOrderGraphToTMFxxx = json.fromJson(workOrderJson,WorkOrderGraphToTMFxxx.class);
 
-        System.out.println(workTicket);
+        System.out.println(workOrderGraphToTMFxxx);
+
         //if(workTicket.getRelatedParty().get(1).get)
         VariableMap variables = Variables.createVariables();
 

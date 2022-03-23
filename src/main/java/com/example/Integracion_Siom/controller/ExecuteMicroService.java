@@ -1,16 +1,6 @@
 package com.example.Integracion_Siom.controller;
 
-import com.example.Integracion_Siom.Models.JsonProject.object;
-import com.example.Integracion_Siom.Models.Project;
-import com.example.Integracion_Siom.exception.BadRequestException;
 import com.example.Integracion_Siom.model.tmfxxx.WorkTicket;
-import com.example.Integracion_Siom.service.impl.SymphonyUserService;
-import com.example.Integracion_Siom.service.impl.SymphonyWorkOrderService;
-import com.example.Integracion_Siom.service.impl.WorkTicketService;
-import com.example.Integracion_Siom.symphony.WorkOrderGraphToTMFxxx;
-import com.example.Integracion_Siom.symphony.WorkOrderTypeGraphToTMFxxx;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
@@ -18,15 +8,10 @@ import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.camunda.bpm.engine.variable.VariableMap;
 import org.camunda.bpm.engine.variable.Variables;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @ExternalTaskSubscription("CheckProyectService")
@@ -34,16 +19,29 @@ public class ExecuteMicroService implements ExternalTaskHandler {
 
     @Override
     public void execute(ExternalTask extTask, ExternalTaskService extTaskService) {
-        Gson json = new Gson();
         String workOrderJson = extTask.getVariable("workOrder").toString();
-        WorkOrderGraphToTMFxxx workOrderGraphToTMFxxx = json.fromJson(workOrderJson,WorkOrderGraphToTMFxxx.class);
+        WorkTicketController workTicketController = new WorkTicketController();
+        WorkTicket workOrder = new Gson().fromJson(workOrderJson,WorkTicket.class);
+        try{
+            String IdUserAssigned= workOrder.getRelatedParty().get(1).getId();
+            UserController userController = new UserController();
+            String groupName = userController.getGroup(IdUserAssigned);
 
-        System.out.println(workOrderGraphToTMFxxx);
+            if(groupName.equals("Proveedor SIOM")){
+                workTicketController.SolicitaSIOM(workOrder);
+            }
+            VariableMap variables = Variables.createVariables();
+            extTaskService.complete(extTask,variables);
 
-        //if(workTicket.getRelatedParty().get(1).get)
-        VariableMap variables = Variables.createVariables();
+            //Map<String, Object> variables = new HashMap<String, Object>();
+            //variables.put("message", message);
+            //variables.put("trial", true);
+            //extTaskService.complete(extTask, variables);
+        }catch (Exception e){
+            VariableMap variables = Variables.createVariables();
+            extTaskService.complete(extTask,variables);
+        }
 
-        extTaskService.complete(extTask,variables);
     }
 
     /*

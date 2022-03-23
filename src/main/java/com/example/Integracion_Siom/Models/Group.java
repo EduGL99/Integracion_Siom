@@ -1,22 +1,25 @@
 package com.example.Integracion_Siom.Models;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Table
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Group {
+    @JsonProperty("id")
+    private String id;
 
-    @Id
-    String id;
-    String name;
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("status")
+    private String status;
 
 }

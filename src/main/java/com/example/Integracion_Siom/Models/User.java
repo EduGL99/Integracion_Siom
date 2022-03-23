@@ -1,27 +1,35 @@
 package com.example.Integracion_Siom.Models;
 
-import lombok.*;
+import com.example.Integracion_Siom.model.tmfxxx.Characteristic;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import java.util.List;
 
-@Table
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
-    @Id
-    String id;
-    String authID;
-    String name;
-    String firstName;
-    String lastName;
-    String email;
-    Enum status;
-    String role;
-    Group[] group;
-    OrganizationFk[] organizationFk;
+    @JsonProperty("id")
+    private String id;
+
+    @JsonProperty("groups")
+    private List<Group> groups;
+
+    //@JsonProperty("characteristic")
+    //private List<Characteristic> characteristic;
+
+    public User(User element) {
+        id = element.getId();
+        groups = element.getGroups();
+        //characteristic = element.getCharacteristic();
+    }
+
 }

@@ -27,8 +27,10 @@ public class ExecuteMicroService implements ExternalTaskHandler {
             UserController userController = new UserController();
             String groupName = userController.getGroup(IdUserAssigned);
 
-            if(groupName.equals("Proveedor SIOM")){
-                workTicketController.SolicitaSIOM(workOrder);
+            if(workOrder.getTicketType().equals("GP - Validación y Documentación")){
+                if(groupName.equals("Proveedor SIOM")){
+                    workTicketController.SolicitaSIOM(workOrder);
+                }
             }
             VariableMap variables = Variables.createVariables();
             extTaskService.complete(extTask,variables);

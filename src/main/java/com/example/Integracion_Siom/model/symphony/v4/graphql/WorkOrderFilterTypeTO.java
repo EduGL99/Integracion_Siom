@@ -1,0 +1,17 @@
+package com.example.Integracion_Siom.model.symphony.v4.graphql;
+
+public enum WorkOrderFilterTypeTO {
+
+    WORK_ORDER_NAME,
+    WORK_ORDER_STATUS,
+    WORK_ORDER_OWNED_BY,
+    WORK_ORDER_TYPE,
+    WORK_ORDER_CREATION_DATE,
+    WORK_ORDER_CLOSE_DATE,
+    WORK_ORDER_ASSIGNED_TO,
+    WORK_ORDER_LOCATION_INST,
+    WORK_ORDER_PRIORITY,
+    LOCATION_INST,
+    LOCATION_INST_EXTERNAL_ID
+
+}
